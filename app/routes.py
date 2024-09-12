@@ -4,7 +4,7 @@ from werkzeug.utils import secure_filename
 import os
 from app.models import db, Video
 from app.config import Config
-from app.utils import allowed_file, save_video_file, get_video_duration, trim_video_file
+from app.utils import allowed_file, save_video_file, get_video_duration, trim_video_file, merge_videos, generate_shareable_link, validate_shareable_link
 
 video_bp = Blueprint('video_bp', __name__)
 
@@ -54,3 +54,52 @@ def trim_video(video_id):
     trimmed_video_path = trim_video_file(video.filename, start_time, end_time)
 
     return jsonify({"message": "Video trimmed", "path": trimmed_video_path}), 200
+
+@video_bp.route('/merge', methods=['POST'])
+def merge_videos_route():
+    token = request.headers.get('Authorization')
+    if token != "Bearer " + Config.API_TOKEN:
+        return jsonify({"error": "Unauthorized"}), 401
+    
+    video_ids = request.json.get('video_ids')
+    if not video_ids:
+        return jsonify({"error": "Video IDs must be provided"}), 400
+
+    video_files = [Video.query.get_or_404(video_id).filename for video_id in video_ids]
+
+    if not video_files:
+        return jsonify({"error": "No videos found to merge"}), 400
+
+    merged_video_path = merge_videos(video_files)
+
+    return jsonify({"message": "Videos merged successfully", "path": merged_video_path}), 200
+
+@video_bp.route('/share', methods=['POST'])
+def share_link_route():
+    token = request.headers.get('Authorization')
+    if token != "Bearer " + Config.API_TOKEN:
+        return jsonify({"error": "Unauthorized"}), 401
+    
+    video_id = request.json.get('video_id')
+    expiry_time = request.json.get('expiry_time')
+
+    if not video_id or not expiry_time:
+        return jsonify({"error": "Video ID and expiry time must be provided"}), 400
+
+    link = generate_shareable_link(video_id, expiry_time)
+
+    return jsonify({"message": "Shareable link generated", "link": link}), 200
+
+@video_bp.route('/validate_link', methods=['POST'])
+def validate_link_route():
+    link = request.json.get('link')
+    
+    if not link:
+        return jsonify({"error": "Link must be provided"}), 400
+
+    is_valid = validate_shareable_link(link)
+
+    if is_valid:
+        return jsonify({"message": "Link is valid"}), 200
+    else:
+        return jsonify({"error": "Link is expired or invalid"}), 400

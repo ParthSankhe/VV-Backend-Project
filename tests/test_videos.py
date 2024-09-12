@@ -1,6 +1,7 @@
 # Unit and end-to-end tests for video-related APIs
 
 import unittest
+from io import BytesIO
 from app import create_app, db
 import os
 
@@ -16,17 +17,21 @@ class VideoUploadTest(unittest.TestCase):
             db.drop_all()
 
     def test_upload_video(self):
-        # Path to the test video
-        test_video_path = os.path.join(os.path.dirname(__file__), '../test_videos/test_video.mp4')
+        # Create a fake video file in memory
+        video_data = BytesIO(b"fake_video_content")
         
-        # Open the video file for testing upload
-        with open(test_video_path, 'rb') as video:
-            response = self.client.post('/upload', 
-                data={'video': video}, 
-                headers={'Authorization': 'Bearer <TOKEN>'}
-            )
-            self.assertEqual(response.status_code, 201)
+        # Perform a POST request to upload the video with valid token
+        response = self.client.post(
+            '/upload',
+            data={'video': (video_data, 'test_video.mp4')},
+            headers={'Authorization': 'Bearer hardcoded_token_12345'},
+            content_type='multipart/form-data'  # Important for file uploads
+        )
+
+        # Expecting 201 Created response for successful upload
+        self.assertEqual(response.status_code, 201)
 
 if __name__ == '__main__':
     unittest.main()
+
 

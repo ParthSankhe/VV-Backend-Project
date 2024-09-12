@@ -11,3 +11,4 @@ class Config:
     SQLALCHEMY_DATABASE_URI = 'sqlite:///../database.db'
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     API_TOKEN = os.getenv("API_TOKEN", "hardcoded_token_12345")  
+    BASE_URL = 'http://localhost:5000'
