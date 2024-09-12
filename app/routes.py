@@ -51,6 +51,9 @@ def trim_video(video_id):
     if not start_time or not end_time:
         return jsonify({"error": "Start and end times must be provided"}), 400
 
+    if start_time < 0 or end_time <= start_time:
+        return jsonify({'error': 'Invalid time range'}), 400
+
     trimmed_video_path = trim_video_file(video.filename, start_time, end_time)
 
     return jsonify({"message": "Video trimmed", "path": trimmed_video_path}), 200
