@@ -203,7 +203,7 @@ This project is a Flask-based API for uploading, trimming, merging, and sharing 
 
 ### Postman Collection
 
-A Postman collection of the API endpoints is available [here](docs/Video API Project.postman_collection.json). You can import this file into Postman to interact with the API and view the documentation directly within Postman.
+A Postman collection of the API endpoints is available [here](api_docs/Video API Project.postman_collection.json). You can import this file into Postman to interact with the API and view the documentation directly within Postman.
 
 ## Citations
 
