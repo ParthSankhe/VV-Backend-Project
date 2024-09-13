@@ -37,28 +37,50 @@ This project is a Flask-based API for uploading, trimming, merging, and sharing 
 5. **Exception Handling:**
    - Appropriate exception handling is implemented for scenarios like missing files, invalid input parameters, and unauthorized requests.
 
+
 ## Setup Instructions
 
-1. **Install dependencies:**
+### Prerequisites
+
+- **Python Version**: Python 3.8 or higher is required.
+- **Virtual Environment**: Using a virtual environment is recommended but optional.
+
+### Installation
+
+1. **Clone the Repository**
+
+   ```bash
+   git clone <your-repo-url>
+   cd <repo-folder>
+   ```
+
+2. **Set Up Virtual Environment** (optional but recommended)
+
+   ```bash
+   python -m venv venv
+   source venv/bin/activate  # On Windows use `venv\Scripts\activate`
+   ```
+
+3. **Install dependencies:**
    ```bash
    pip install -r requirements.txt
    ```
 
-2. **Set up the database:**
+4. **Set up the database:**
    The database is automatically configured to use SQLite. No additional setup is required unless you want to switch to another database.
 
-3. **Environment Variables:**
+5. **Environment Variables:**
    The API token can be set dynamically:
    ```bash
    export API_TOKEN='your_token_here'
    ```
 
-4. **Run the application:**
+6. **Run the application:**
    ```bash
    flask run
    ```
 
-5. **Run tests:**
+7. **Run tests:**
    ```bash
    pytest
    ```
@@ -94,8 +116,8 @@ This project is a Flask-based API for uploading, trimming, merging, and sharing 
 - **Request Body (JSON)**:
   ```json
   {
-    "start_time": 5,
-    "end_time": 15
+    "start_time": 3.5,
+    "end_time": 10
   }
   ```
 - **Response**:
@@ -177,6 +199,11 @@ This project is a Flask-based API for uploading, trimming, merging, and sharing 
     - Missing link.
     - Expired or invalid link.
 
+## API Documentation
+
+### Postman Collection
+
+A Postman collection of the API endpoints is available [here](docs/Video API Project.postman_collection.json). You can import this file into Postman to interact with the API and view the documentation directly within Postman.
 
 ## Citations
 

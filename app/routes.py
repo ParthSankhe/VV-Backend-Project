@@ -50,6 +50,12 @@ def trim_video(video_id):
         video = Video.query.get_or_404(video_id)
         start_time = request.json.get('start_time')
         end_time = request.json.get('end_time')
+        
+        try:
+            start_time = float(start_time)
+            end_time = float(end_time)
+        except ValueError:
+            return jsonify({"error": "Start and end times must be valid numbers"}), 400
 
         if not start_time or not end_time:
             return jsonify({"error": "Start and end times must be provided"}), 400
