@@ -9,6 +9,7 @@ class LinkSharingTest(unittest.TestCase):
     def setUp(self):
         self.app = create_app()
         self.client = self.app.test_client()
+        self.api_token = os.getenv('API_TOKEN', 'hardcoded_token_12345')
         with self.app.app_context():
             db.create_all()
 
@@ -22,7 +23,7 @@ class LinkSharingTest(unittest.TestCase):
         response = self.client.post(
             '/upload',
             data={'video': (open(video_path, 'rb'), 'test_video_dummy.mp4')},
-            headers={'Authorization': 'Bearer hardcoded_token_12345'},
+            headers={'Authorization': f'Bearer {self.api_token}'},
             content_type='multipart/form-data'
         )
         video_id = response.json['id']
@@ -32,7 +33,7 @@ class LinkSharingTest(unittest.TestCase):
         response = self.client.post(
             '/share',
             json={'video_id': video_id, 'expiry_time': expiry_time},
-            headers={'Authorization': 'Bearer hardcoded_token_12345'}
+            headers={'Authorization': f'Bearer {self.api_token}'}
         )
 
         self.assertEqual(response.status_code, 200)

@@ -8,6 +8,7 @@ class VideoUploadTest(unittest.TestCase):
     def setUp(self):
         self.app = create_app()
         self.client = self.app.test_client()
+        self.api_token = os.getenv('API_TOKEN', 'hardcoded_token_12345')
         with self.app.app_context():
             db.create_all()
 
@@ -20,7 +21,7 @@ class VideoUploadTest(unittest.TestCase):
         response = self.client.post(
             '/upload',
             data={'video': (open(video_path, 'rb'), 'test_video_dummy.mp4')},
-            headers={'Authorization': 'Bearer hardcoded_token_12345'},
+            headers={'Authorization': f'Bearer {self.api_token}'},
             content_type='multipart/form-data'
         )
         self.assertEqual(response.status_code, 201)
@@ -34,7 +35,7 @@ class VideoUploadTest(unittest.TestCase):
         response = self.client.post(
             f'/trim/{self.video_id}',
             json={'start_time': 3, 'end_time': 10},
-            headers={'Authorization': 'Bearer hardcoded_token_12345'}
+            headers={'Authorization': f'Bearer {self.api_token}'}
         )
         
         # Print the response data for debugging
@@ -50,7 +51,7 @@ class VideoUploadTest(unittest.TestCase):
         response1 = self.client.post(
             '/upload',
             data={'video': (open(video_path1, 'rb'), 'test_video_1.mp4')},
-            headers={'Authorization': 'Bearer hardcoded_token_12345'},
+            headers={'Authorization': f'Bearer {self.api_token}'},
             content_type='multipart/form-data'
         )
         video_id1 = response1.json['id']
@@ -59,7 +60,7 @@ class VideoUploadTest(unittest.TestCase):
         response2 = self.client.post(
             '/upload',
             data={'video': (open(video_path2, 'rb'), 'test_video_2.mp4')},
-            headers={'Authorization': 'Bearer hardcoded_token_12345'},
+            headers={'Authorization': f'Bearer {self.api_token}'},
             content_type='multipart/form-data'
         )
         video_id2 = response2.json['id']
@@ -68,7 +69,7 @@ class VideoUploadTest(unittest.TestCase):
         response = self.client.post(
             '/merge',
             json={'video_ids': [video_id1, video_id2]},
-            headers={'Authorization': 'Bearer hardcoded_token_12345'}
+            headers={'Authorization': f'Bearer {self.api_token}'}
         )
         self.assertEqual(response.status_code, 200)
 

@@ -13,7 +13,7 @@ def upload_video():
         token = request.headers.get('Authorization')
         if token != "Bearer " + Config.API_TOKEN:
             return jsonify({"error": "Unauthorized"}), 401
-
+        
         if 'video' not in request.files:
             return jsonify({"error": "No video uploaded"}), 400
         

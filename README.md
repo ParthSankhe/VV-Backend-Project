@@ -72,7 +72,7 @@ This project is a Flask-based API for uploading, trimming, merging, and sharing 
 5. **Environment Variables:**
    The API token can be set dynamically:
    ```bash
-   export API_TOKEN='your_token_here'
+   export API_TOKEN='your_token_here' # On Windows use `set API_TOKEN='your_token_here'`
    ```
 
 6. **Run the application:**
